@@ -1,0 +1,49 @@
+// Defines common messages for each service
+
+syntax = "proto3";
+package treplo.common;
+
+import "google/protobuf/duration.proto";
+
+// Track object
+message Track {
+    string title = 1; // Title of the track
+    string author = 2; // Author of the track
+    google.protobuf.Duration duration = 3; // Duration of the track
+    AudioSource source = 4; // AudioSource for the track
+    optional Thumbnail thumbnail = 5; // Optional thumbnail for the track
+}
+
+//Thumbnail object
+message Thumbnail {
+    string url = 1; // Url to the image
+}
+
+// Codec object
+message Codec {
+    string name = 1; // Name of the codec. For now also contains codec settings
+}
+
+// Container object
+message Container {
+    string name = 1; // Name of the container
+}
+
+// Bitrate object
+message Bitrate {
+    uint64 bits_per_second = 1; // Bits per second
+}
+
+// File size object
+message Filesize {
+    uint64 bytes_length = 1; // Size of the file in bytes
+}
+
+// Audio source object
+message AudioSource {
+    string url = 1; // Url to the audio
+    Codec codec = 2; // Codec, in which audio is encoded
+    Container container = 3; // Container, in which audio is stored
+    Bitrate bitrate = 4; // Bitrate of the audio data
+    Filesize filesize = 5; // Total size of the audio file
+}

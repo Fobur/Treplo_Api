@@ -1,0 +1,94 @@
+// Defines messages specific for the Players service and the players service itself
+
+syntax = "proto3";
+import "common.proto";
+
+package treplo.players_service;
+
+// Player identifier object
+message PlayerIdentifier {
+    string player_id = 1; // string id of the player
+}
+
+// Request to enqueue a track to the player
+message EnqueueRequest {
+    PlayerIdentifier playerRequest = 1; // Id of the player
+    treplo.common.Track track = 2; // Track object to enqueue
+}
+
+// Result of the enqueue
+message EnqueueResult {
+    // Empty for now
+}
+
+// Request to dequeue a track from player
+message DequeueRequest {
+    PlayerIdentifier playerRequest = 1; // Id of the player
+}
+
+// Result of the dequeue
+message DequeueResult {
+    optional treplo.common.Track track = 1; // Optional track, if the player had one
+}
+
+// Request to get full state of the player
+message GetStateRequest {
+    PlayerIdentifier playerRequest = 1; // Id of the player
+}
+
+// Enum representing state of the loop in player
+enum LoopState {
+    OFF = 0; // Loop is off
+    ON = 1; // Loop is on
+}
+
+// Object representing the queue of the player
+message Queue {
+    repeated treplo.common.Track tracks = 1; // Tracks that are in the queue
+}
+
+// Full state of the player
+message PlayerState {
+    LoopState loop = 1; // state of the loop
+    Queue queue = 2; // queue of the player
+}
+
+// Request to change the loop state in player
+message LoopRequest {
+    PlayerIdentifier playerRequest = 1; // Id of the player
+}
+
+// Result of the changing loop state
+message LoopResult {
+    LoopState loop = 1; // Current loop state, after the change
+}
+
+// Request to shuffle the queue of the player
+message ShuffleRequest {
+    PlayerIdentifier playerRequest = 1; // Id of the player
+}
+
+// Result of shuffling the queue
+message ShuffleResult {
+    Queue Queue = 1; // New queue, after shuffling
+}
+
+// Request to playback the audio from specified source
+message PlayRequest {
+    treplo.common.AudioSource audio_source = 1; // Audio source to play from
+}
+
+// Partial audio stream data
+message AudioFrame {
+    bool is_end = 1; // Is this the last frame
+    bytes bytes = 2; // Part of the audio data
+}
+
+service PlayersService {
+    rpc Play(PlayRequest) returns (stream AudioFrame);
+    rpc Enqueue(EnqueueRequest) returns (EnqueueResult);
+    rpc Dequeue(DequeueRequest) returns (DequeueResult);
+    rpc GetState(GetStateRequest) returns (PlayerState);
+    rpc Loop(LoopRequest) returns (LoopResult);
+    rpc Shuffle(ShuffleRequest) returns (ShuffleResult);
+}

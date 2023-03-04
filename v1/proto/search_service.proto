@@ -1,0 +1,22 @@
+// Defines Search Service specific messages and the search service itself
+
+syntax = "proto3";
+import "common.proto";
+
+package treplo.search_service;
+
+
+// Request for a search stream
+message TrackSearchRequest {
+    string query = 1; // Query to search for
+    optional uint32 limit = 2; // Optional limit for search results. If ommited will search while indefinitely
+}
+
+message TrackSearchResult {
+    treplo.common.Track track = 1; // Found Track object
+    string search_engine_name = 2; // Name of the search engine, where the track was found
+}
+
+service SearchService {
+    rpc Search(TrackSearchRequest) returns (stream TrackSearchResult);
+}
